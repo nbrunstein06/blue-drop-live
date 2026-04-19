@@ -148,14 +148,15 @@ useEffect(() => {
   <br />
   Position actuelle
   <br />
-  Dernier point :
-  {" "}
+  Dernier point :{" "}
   {latest?.created_at
-  ? new Date(latest.created_at).toLocaleTimeString("fr-FR", {
-      hour: "2-digit",
-      minute: "2-digit",
-    })
-  : "inconnu"}
+    ? new Date(latest.created_at).toLocaleTimeString("fr-FR", {
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : "inconnu"}
+  <br />
+  Batterie : {p.battery_level != null ? `${Math.round(p.battery_level * 100)}%` : "inconnue"}
 </Popup>
   </Marker>
 )}
@@ -199,6 +200,9 @@ useEffect(() => {
           <p>Actif : {p.share_active ? "oui" : "non"}</p>
           <p>Lat : {p.last_lat}</p>
 <p>Lng : {p.last_lng}</p>
+<p>
+  Batterie : {p.battery_level != null ? `${Math.round(p.battery_level * 100)}%` : "inconnue"}
+</p>
 
           {p.share_active && (
   <button onClick={() => stopParticipant(p.id)}>
