@@ -36,12 +36,14 @@ async function loadTracks(participantsList: any[]) {
   const nextTracks: Record<string, any[]> = {};
 
   for (const p of participantsList) {
-    const { data, error } = await supabase
-      .from("locations")
-      .select("id, lat, lng, created_at")
-      .eq("participant_id", p.id)
-      .order("created_at", { ascending: false })
-      .limit(50);
+    const twentyMinutesAgo = new Date(Date.now() - 20 * 60 * 1000).toISOString();
+
+const { data, error } = await supabase
+  .from("locations")
+  .select("id, lat, lng, created_at")
+  .eq("participant_id", p.id)
+  .gte("created_at", twentyMinutesAgo)
+  .order("created_at", { ascending: false });
 
     if (!error && data) {
       nextTracks[p.id] = data;
