@@ -177,7 +177,23 @@ useEffect(() => {
       })
     : "inconnu"}
   <br />
-  Batterie : {p.battery_level != null ? `${Math.round(p.battery_level * 100)}%` : "inconnue"}
+  <span
+  style={{
+    color:
+      p.battery_level == null
+        ? "gray"
+        : p.battery_level < 0.2
+        ? "red"
+        : "black",
+    fontWeight: p.battery_level < 0.2 ? "bold" : "normal",
+  }}
+>
+  Batterie :{" "}
+  {p.battery_level != null
+    ? `${Math.round(p.battery_level * 100)}%`
+    : "inconnue"}
+  {p.battery_level != null && p.battery_level < 0.2 ? " ⚠️ Batterie faible" : ""}
+</span>
   
 </Popup>
   </Marker>
