@@ -126,6 +126,14 @@ useEffect(() => {
   const points = tracks[p.id] || [];
   const ordered = [...points].reverse();
   const path = ordered.map((pt) => [pt.lat, pt.lng] as [number, number]);
+  const batteryColor =
+      p. battery_level == null  
+      ? "gray"
+      : p.battery_level > 0.6
+      ? "green"
+      : p.battery_level >0.2
+      ? "orange"
+      : "red"
   const latest = points[0];
 
   return (
@@ -134,6 +142,17 @@ useEffect(() => {
   <Polyline
     positions={path}
     pathOptions={{ color: "#2563eb", weight: 6, opacity: 0.9 }}
+  />
+)}
+      {latest && (
+  <CircleMarker
+    center={[latest.lat, latest.lng]}
+    radius={14}
+    pathOptions={{
+      color: batteryColor,
+      fillColor: batteryColor,
+      fillOpacity: 0.35,
+    }}
   />
 )}
       {latest && kayakIcon && (
@@ -157,6 +176,7 @@ useEffect(() => {
     : "inconnu"}
   <br />
   Batterie : {p.battery_level != null ? `${Math.round(p.battery_level * 100)}%` : "inconnue"}
+  
 </Popup>
   </Marker>
 )}
