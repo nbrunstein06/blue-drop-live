@@ -13,7 +13,7 @@ export default function AdminPage() {
   const [password, setPassword] = useState("");
   const [isLogged, setIsLogged] = useState(false);
   const [participants, setParticipants] = useState<any[]>([]);
-  const [selectedId, setSelectedID] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const mapRef = useRef<any>(null);
   const [tracks, setTracks] = useState<Record<string, any[]>>({});
   const [kayakIcon, setKayakIcon] = useState<any>(null);
