@@ -6,7 +6,7 @@ const Marker = dynamic(() => import("react-leaflet").then(m => m.Marker), { ssr:
 const Popup = dynamic(() => import("react-leaflet").then(m => m.Popup), { ssr: false });
 const Polyline = dynamic(() => import("react-leaflet").then(m => m.Polyline), { ssr: false });
 const CircleMarker = dynamic(() => import("react-leaflet").then(m => m.CircleMarker), { ssr: false });
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/lib/supabase-browser";
 import "leaflet/dist/leaflet.css"
 import { useMap } from "react-leaflet";
@@ -30,6 +30,7 @@ export default function AdminPage() {
   const [isLogged, setIsLogged] = useState(false);
   const [participants, setParticipants] = useState<any[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const mapRef = useRef<any>(null)
   const [selecetedPosition, setSelectedPosition] = useState<[number, number] | null>(null);
   const [tracks, setTracks] = useState<Record<string, any[]>>({});
   const [kayakIcon, setKayakIcon] = useState<any>(null);
@@ -169,6 +170,7 @@ useEffect(() => {
   </div>
 </div>
   <MapContainer
+  ref={mapref}
   center={[43.5725, 7.0467] as [number, number]}
   zoom={13}
   style={{ height: "100%", width: "100%" }}
