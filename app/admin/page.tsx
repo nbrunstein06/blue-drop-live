@@ -281,46 +281,48 @@ useEffect(() => {
   </MapContainer>
 </div>
 
-      {participants.map((p) => (
-  <div
-    key={p.id}
-    onClick={() => {
-      setSelectedId(p.id);
+      {participants.map((p) => {
+  const pts = tracks[p.id] || []
 
-      const pts = tracks[p.id] || [];
-      if (pts.length > 0) {
-        setSelectedPosition([pts[0].lat, pts[0].lng]);
-      }
-    }}
-    style={{
-      padding: "8px",
-      marginBottom: "4px",
-      cursor: "pointer",
-      borderRadius: "6px",
-      background: selectedId === p.id ? "#e0f2fe" : "white",
-    }}
-  >
-    {p.name}
-  </div>
-))}
-    <div><strong>{p.first_name || ""} {p.last_name || ""}</strong></div>
-    <div>Actif : {p.share_active ? "oui" : "non"}</div>
-    <div>Lat : {p.last_lat ?? "?"}</div>
-    <div>Lng : {p.last_lng ?? "?"}</div>
-    <div>
-      Batterie : {p.battery_level != null ? `${Math.round(p.battery_level * 100)}%` : "inconnue"}
-    </div>
-
-    <button
-      onClick={(e) => {
-        e.stopPropagation();
-        stopParticipant(p.id);
+  return (
+    <div
+      key={p.id}
+      onClick={() => {
+        setSelectedId(p.id)
+        if (pts.length > 0 && mapRef.current) {
+          mapRef.current.setView([pts[0].lat, pts[0].lng], 16)
+        }
+      }}
+      style={{
+        padding: "8px",
+        marginBottom: "4px",
+        cursor: "pointer",
+        borderRadius: "6px",
+        background: selectedId === p.id ? "#e0f2fe" : "white",
       }}
     >
-      Arrêter
-    </button>
-  </div>
-))}
+      <div>
+        <strong>{p.first_name || ""} {p.last_name || ""}</strong>
+      </div>
+
+      <div>Actif : {p.share_active ? "oui" : "non"}</div>
+      <div>Lat : {p.last_lat ?? "?"}</div>
+      <div>Lng : {p.last_lng ?? "?"}</div>
+      <div>
+        Batterie : {p.battery_level != null ? `${Math.round(p.battery_level * 100)}%` : "inconnue"}
+      </div>
+
+      <button
+        onClick={(e) => {
+          e.stopPropagation()
+          stopParticipant(p.id)
+        }}
+      >
+        Arrêter
+      </button>
+    </div>
+  )
+})}
     </main>
   );
 }
