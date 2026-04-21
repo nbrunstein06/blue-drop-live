@@ -170,7 +170,7 @@ useEffect(() => {
   </div>
 </div>
   <MapContainer
-  ref={mapref}
+  ref={mapRef}
   center={[43.5725, 7.0467] as [number, number]}
   zoom={13}
   style={{ height: "100%", width: "100%" }}
