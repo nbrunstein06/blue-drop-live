@@ -31,7 +31,7 @@ export default function AdminPage() {
   const [participants, setParticipants] = useState<any[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const mapRef = useRef<any>(null)
-  const [selecetedPosition, setSelectedPosition] = useState<[number, number] | null>(null);
+  const [selectedPosition, setSelectedPosition] = useState<[number, number] | null>(null);
   const [tracks, setTracks] = useState<Record<string, any[]>>({});
   const [kayakIcon, setKayakIcon] = useState<any>(null);
 
