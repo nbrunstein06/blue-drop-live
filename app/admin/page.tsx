@@ -157,6 +157,7 @@ useEffect(() => {
     center={[43.5725, 7.0467] as [number,number]}
     zoom={13}
     style={{ height: "100%", width: "100%" }}
+    ref={mapRef}
     >
     <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
@@ -266,26 +267,41 @@ useEffect(() => {
 </div>
 
       {participants.map((p) => (
-        <div key={p.id} style={{ marginBottom: 20 }}>
-         <p>
-  {p.first_name || p.last_name
-    ? `${p.first_name || ""} ${p.last_name || ""}`
-    : p.name}
-</p>
-          <p>Actif : {p.share_active ? "oui" : "non"}</p>
-          <p>Lat : {p.last_lat}</p>
-<p>Lng : {p.last_lng}</p>
-<p>
-  Batterie : {p.battery_level != null ? `${Math.round(p.battery_level * 100)}%` : "inconnue"}
-</p>
+  <div
+    key={p.id}
+    onClick={() => {
+      setSelectedId(p.id);
+      if (mapRef.current && p.last_lat && p.last_lng) {
+        mapRef.current.setView([p.last_lat, p.last_lng], 17);
+      }
+    }}
+    style={{
+      padding: "10px",
+      marginBottom: "10px",
+      border: selectedId === p.id ? "2px solid #2563eb" : "1px solid #ccc",
+      borderRadius: "10px",
+      cursor: "pointer",
+      background: selectedId === p.id ? "#eff6ff" : "#fff",
+    }}
+  >
+    <div><strong>{p.first_name || ""} {p.last_name || ""}</strong></div>
+    <div>Actif : {p.share_active ? "oui" : "non"}</div>
+    <div>Lat : {p.last_lat ?? "?"}</div>
+    <div>Lng : {p.last_lng ?? "?"}</div>
+    <div>
+      Batterie : {p.battery_level != null ? `${Math.round(p.battery_level * 100)}%` : "inconnue"}
+    </div>
 
-          {p.share_active && (
-  <button onClick={() => stopParticipant(p.id)}>
-    Arrêter
-  </button>
-)}
-        </div>
-      ))}
+    <button
+      onClick={(e) => {
+        e.stopPropagation();
+        stopParticipant(p.id);
+      }}
+    >
+      Arrêter
+    </button>
+  </div>
+))}
     </main>
   );
 }
