@@ -6,13 +6,15 @@ const Marker = dynamic(() => import("react-leaflet").then(m => m.Marker), { ssr:
 const Popup = dynamic(() => import("react-leaflet").then(m => m.Popup), { ssr: false });
 const Polyline = dynamic(() => import("react-leaflet").then(m => m.Polyline), { ssr: false });
 const CircleMarker = dynamic(() => import("react-leaflet").then(m => m.CircleMarker), { ssr: false });
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/lib/supabase-browser";
 import "leaflet/dist/leaflet.css"
 export default function AdminPage() {
   const [password, setPassword] = useState("");
   const [isLogged, setIsLogged] = useState(false);
   const [participants, setParticipants] = useState<any[]>([]);
+  const [selectedId, setSelectedID] = useSate<string | null>(null);
+  const mapRef = useRef<any>(null);
   const [tracks, setTracks] = useState<Record<string, any[]>>({});
   const [kayakIcon, setKayakIcon] = useState<any>(null);
 
@@ -116,7 +118,42 @@ useEffect(() => {
       <h1>Participants</h1>
       <div style={{ height: 700, marginBottom: 30 }}
       >
+  <div style={{ padding: 12, background: "#fff", borderBottom: "1px solid #ddd" }}>
+  <div style={{ fontWeight: "bold", marginBottom: 8 }}>
+    Participants actifs
+  </div>
+
+  <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+    {participants
+      .filter((p) => p.share_active)
+      .map((p) => (
+        <button
+          key={p.id}
+          onClick={() => {
+            setSelectedId(p.id)
+
+            const pts = tracks[p.id] || []
+            if (pts.length > 0 && mapRef.current) {
+              mapRef.current.setView([pts[0].lat, pts[0].lng], 16)
+            }
+          }}
+          style={{
+            padding: "8px 12px",
+            borderRadius: 8,
+            border: selectedId === p.id ? "2px solid #2563eb" : "1px solid #ccc",
+            background: selectedId === p.id ? "#dbeafe" : "#fff",
+            cursor: "pointer",
+          }}
+        >
+          {p.first_name || p.last_name
+            ? `${p.first_name || ""} ${p.last_name || ""}`.trim()
+            : p.name || "Sans nom"}
+        </button>
+      ))}
+  </div>
+</div>
   <MapContainer
+    whenCreated={(mapInstance) => (mapRef.current = mapInstance)}
     center={[43.5725, 7.0467] as [number,number]}
     zoom={13}
     style={{ height: "100%", width: "100%" }}
