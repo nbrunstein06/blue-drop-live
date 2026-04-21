@@ -6,15 +6,31 @@ const Marker = dynamic(() => import("react-leaflet").then(m => m.Marker), { ssr:
 const Popup = dynamic(() => import("react-leaflet").then(m => m.Popup), { ssr: false });
 const Polyline = dynamic(() => import("react-leaflet").then(m => m.Polyline), { ssr: false });
 const CircleMarker = dynamic(() => import("react-leaflet").then(m => m.CircleMarker), { ssr: false });
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase-browser";
 import "leaflet/dist/leaflet.css"
+import { useMap } from "react-leaflet";
+function RecenterMap({
+  position,
+}: {
+  position: [number, number] | null;
+}) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (position) {
+      map.setView(position, 15);
+    }
+  }, [position, map]);
+
+  return null;
+}
 export default function AdminPage() {
   const [password, setPassword] = useState("");
   const [isLogged, setIsLogged] = useState(false);
   const [participants, setParticipants] = useState<any[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const mapRef = useRef<any>(null);
+  const [selecetedPosition, setSelectedPosition] = useState<[number, number] | null>(null);
   const [tracks, setTracks] = useState<Record<string, any[]>>({});
   const [kayakIcon, setKayakIcon] = useState<any>(null);
 
@@ -153,12 +169,11 @@ useEffect(() => {
   </div>
 </div>
   <MapContainer
-    whenCreated={(mapInstance) => (mapRef.current = mapInstance)}
-    center={[43.5725, 7.0467] as [number,number]}
-    zoom={13}
-    style={{ height: "100%", width: "100%" }}
-    ref={mapRef}
-    >
+  center={[43.5725, 7.0467] as [number, number]}
+  zoom={13}
+  style={{ height: "100%", width: "100%" }}
+>
+  <RecenterMap position={selectedPosition} />
     <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
     {participants.map((p) => {
@@ -271,19 +286,23 @@ useEffect(() => {
     key={p.id}
     onClick={() => {
       setSelectedId(p.id);
-      if (mapRef.current && p.last_lat && p.last_lng) {
-        mapRef.current.setView([p.last_lat, p.last_lng], 17);
+
+      const pts = tracks[p.id] || [];
+      if (pts.length > 0) {
+        setSelectedPosition([pts[0].lat, pts[0].lng]);
       }
     }}
     style={{
-      padding: "10px",
-      marginBottom: "10px",
-      border: selectedId === p.id ? "2px solid #2563eb" : "1px solid #ccc",
-      borderRadius: "10px",
+      padding: "8px",
+      marginBottom: "4px",
       cursor: "pointer",
-      background: selectedId === p.id ? "#eff6ff" : "#fff",
+      borderRadius: "6px",
+      background: selectedId === p.id ? "#e0f2fe" : "white",
     }}
   >
+    {p.name}
+  </div>
+))}
     <div><strong>{p.first_name || ""} {p.last_name || ""}</strong></div>
     <div>Actif : {p.share_active ? "oui" : "non"}</div>
     <div>Lat : {p.last_lat ?? "?"}</div>
