@@ -333,7 +333,7 @@ useEffect(() => {
   </MapContainer>
   </div>
 <div style={{ height: "40%", overflowY: "auto", padding: 10, background: "#f9fafb" }}>
-      <div style={{ height: "40vh", overflowY: "auto", padding: 10, background: "#f9fafb"}}>
+      
       {participants.map((p) => {
   const pts = tracks[p.id] || []
 
