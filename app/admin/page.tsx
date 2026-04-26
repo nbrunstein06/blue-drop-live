@@ -218,12 +218,12 @@ useEffect(() => {
       ))}
   </div>
 </div>
-<div style={{ height: "60vh", width: "100%" }}></div>
+
   <MapContainer
   ref={mapRef}
   center={[43.5725, 7.0467] as [number, number]}
   zoom={13}
-  style={{ height: "100%", width: "100%" }}
+  style={{ height: "60vh", width: "100%" }}
 >
   <RecenterMap position={selectedPosition} />
     <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
