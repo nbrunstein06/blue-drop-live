@@ -116,40 +116,37 @@ useEffect(() => {
   }
   async function clearHistory() {
   const confirmDelete = window.confirm(
-    "Voulez-vous vraiment effacer tout l'historique des positions ?"
+    "Voulez-vous vraiment effacer l'historique et supprimer les participants inactifs ?"
   );
 
   if (!confirmDelete) return;
 
-  const { error: deleteError } = await supabase
+  const { error: deleteLocationsError } = await supabase
     .from("locations")
     .delete()
     .not("id", "is", null);
 
-  if (deleteError) {
-    console.error(deleteError);
-    alert("Erreur suppression historique : " + deleteError.message);
+  if (deleteLocationsError) {
+    console.error(deleteLocationsError);
+    alert("Erreur suppression historique : " + deleteLocationsError.message);
     return;
   }
 
-  const { error: updateError } = await supabase
+  const { error: deleteParticipantsError } = await supabase
     .from("participants")
-    .update({
-      last_lat: null,
-      last_lng: null,
-    })
-    .not("id", "is", null);
+    .delete()
+    .eq("share_active", false);
 
-  if (updateError) {
-    console.error(updateError);
-    alert("Historique supprimé, mais erreur reset participants : " + updateError.message);
+  if (deleteParticipantsError) {
+    console.error(deleteParticipantsError);
+    alert("Erreur suppression participants inactifs : " + deleteParticipantsError.message);
     return;
   }
 
   setTracks({});
   await loadParticipants();
 
-  alert("Historique effacé");
+  alert("Historique effacé et participants inactifs supprimés");
 }
 
   if (!isLogged) {
