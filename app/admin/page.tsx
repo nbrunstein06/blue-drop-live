@@ -165,7 +165,7 @@ useEffect(() => {
   }
 
   return (
-    <main style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
+    <main style={{ display: "flex", flexDirection: "column", height: "100vh", padding: 0, overflow: "hidden" }}>
       <h1>Participants</h1>
       <div style={{ display: "flex", flex : 1 }}
       >
@@ -218,11 +218,12 @@ useEffect(() => {
       ))}
   </div>
 </div>
+<div style={{ height: "60vh", width: "100%" }}></div>
   <MapContainer
   ref={mapRef}
   center={[43.5725, 7.0467] as [number, number]}
   zoom={13}
-  style={{ height: "100%", width: "60%" }}
+  style={{ height: "100%", width: "100%" }}
 >
   <RecenterMap position={selectedPosition} />
     <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
@@ -330,8 +331,9 @@ useEffect(() => {
   );
 })}
   </MapContainer>
-<div style={{ width: "40%", height: "100%", overflowY: "auto", padding: 10 }}>
-
+  </div>
+<div style={{ height: "40%", overflowY: "auto", padding: 10, background: "#f9fafb" }}>
+      <div style={{ height: "40vh", overflowY: "auto", padding: 10, background: "#f9fafb"}}>
       {participants.map((p) => {
   const pts = tracks[p.id] || []
 
