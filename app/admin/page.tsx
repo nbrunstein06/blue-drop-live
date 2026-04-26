@@ -114,6 +114,27 @@ useEffect(() => {
 
     loadParticipants();
   }
+  async function clearHistory() {
+  const confirmDelete = window.confirm(
+    "Voulez-vous vraiment effacer tout l'historique des positions ?"
+  );
+
+  if (!confirmDelete) return;
+
+  const { error } = await supabase
+    .from("locations")
+    .delete()
+    .not("id", "is", null);
+
+  if (error) {
+    console.error(error);
+    alert("Erreur lors de la suppression de l'historique");
+    return;
+  }
+
+  setTracks({});
+  alert("Historique effacé");
+}
 
   if (!isLogged) {
     return (
@@ -138,6 +159,21 @@ useEffect(() => {
   <div style={{ padding: 12, background: "#fff", borderBottom: "1px solid #ddd" }}>
   <div style={{ fontWeight: "bold", marginBottom: 8 }}>
     Participants actifs
+    <button
+  onClick={clearHistory}
+  style={{
+    padding: "8px 12px",
+    marginBottom: "12px",
+    background: "#dc2626",
+    color: "white",
+    border: "none",
+    borderRadius: "6px",
+    cursor: "pointer",
+    fontWeight: "bold",
+  }}
+>
+  Effacer l'historique
+</button>
   </div>
 
   <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
