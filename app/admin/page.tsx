@@ -364,13 +364,26 @@ useEffect(() => {
       </div>
 
       <button
-        onClick={(e) => {
-          e.stopPropagation()
-          stopParticipant(p.id)
-        }}
-      >
-        Arrêter
-      </button>
+  onClick={(e) => {
+    e.stopPropagation()
+    if (p.share_active) {
+      stopParticipant(p.id)
+    }
+  }}
+  disabled={!p.share_active}
+  style={{
+    padding: "6px 10px",
+    marginTop: "6px",
+    borderRadius: "6px",
+    border: "1px solid #dc2626",
+    background: p.share_active ? "#dc2626" : "#e5e7eb",
+    color: p.share_active ? "white" : "#6b7280",
+    cursor: p.share_active ? "pointer" : "not-allowed",
+    fontWeight: "bold",
+  }}
+>
+  {p.share_active ? "Arrêter" : "Inactif"}
+</button>
     </div>
   )
 })}
