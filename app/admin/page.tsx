@@ -121,18 +121,34 @@ useEffect(() => {
 
   if (!confirmDelete) return;
 
-  const { error } = await supabase
+  const { error: deleteError } = await supabase
     .from("locations")
     .delete()
     .not("id", "is", null);
 
-  if (error) {
-    console.error(error);
-    alert("Erreur lors de la suppression de l'historique");
+  if (deleteError) {
+    console.error(deleteError);
+    alert("Erreur suppression historique : " + deleteError.message);
+    return;
+  }
+
+  const { error: updateError } = await supabase
+    .from("participants")
+    .update({
+      last_lat: null,
+      last_lng: null,
+    })
+    .not("id", "is", null);
+
+  if (updateError) {
+    console.error(updateError);
+    alert("Historique supprimé, mais erreur reset participants : " + updateError.message);
     return;
   }
 
   setTracks({});
+  await loadParticipants();
+
   alert("Historique effacé");
 }
 
